@@ -23,12 +23,12 @@
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            padding: 4px 12px;
-            height: 30px;
+            padding: 0 10px;
+            height: 28px;
             border-radius: 4px;
             background: radial-gradient(circle at top, #170202 0, #170202 60%);
             border: 1px solid rgba(248, 56, 82, 0.6);
-            box-shadow: inset 0 0 4px rgba(42, 15, 15, 0.95), 0 0 12px rgba(248, 56, 98, 0.35);
+            box-shadow: inset 0 0 3px rgba(42, 15, 15, 0.95), 0 0 7px rgba(248, 56, 98, 0.35);
             overflow: hidden;
         }
 
@@ -76,7 +76,7 @@
             color: #e0f2fe;
             text-shadow:
                 0 0 4px rgba(248, 56, 82, 0.6),
-                0 0 10px rgba(212, 78, 45, 0.9);
+                0 0 8px rgba(212, 78, 45, 0.9);
         }
 
         .timer-myling .timer-time::after {
@@ -122,56 +122,44 @@
             transition: background 0.1s ease, transform 0.07s ease;
         }
 
-        .timer-myling #start-pause.timer-btn {
+        .timer-spirit #start-pause.timer-btn {
             padding-top: 1px;
         }
 
-        .timer-myling #reset.timer-btn {
+        .timer-spirit #reset.timer-btn {
             padding-bottom: 1px;
         }
 
-        .timer-myling .timer-btn:hover {
+        .timer-spirit .timer-btn:hover {
             background: #170202;
         }
 
-        .timer-myling .timer-btn:active {
+        .timer-spirit .timer-btn:active {
             transform: translateY(1px);
         }
 
-        .timer-myling.running.flicker-low {
+        .timer-spirit.running.flicker-low {
             animation: bar-flicker-low 0.8s;
         }
 
-        .timer-myling.running.flicker-low::before {
-            animation: tv-static-move 0.4s steps(3, end);
+        .timer-spirit.running.flicker-low::after {
+            animation: veil-flicker-low 0.8s;
         }
 
-        .timer-myling.running.flicker-low::after {
-            animation: tv-flicker-low 0.8s;
-        }
-
-        .timer-myling.running.flicker-high {
+        .timer-spirit.running.flicker-high {
             animation: bar-flicker-high 1s;
         }
 
-        .timer-myling.running.flicker-high::before {
-            animation: tv-static-move 0.3s steps(3, end);
+        .timer-spirit.running.flicker-high::after {
+            animation: veil-flicker-high 1s;
         }
 
-        .timer-myling.running.flicker-high::after {
-            animation: tv-flicker-high 1s;
+        .timer-spirit.end-flicker {
+            animation: bar-flicker-max 1s;
         }
 
-        .timer-myling.end-flicker {
-            animation: bar-flicker-max 0.9s;
-        }
-
-        .timer-myling.end-flicker::before {
-            animation: tv-static-move 0.7s steps(4, end);
-        }
-
-        .timer-myling.end-flicker::after {
-            animation: tv-flicker-max 0.9s;
+        .timer-spirit.end-flicker::after {
+            animation: veil-flicker-max 1s;
         }
 
         @keyframes tv-static-move {
