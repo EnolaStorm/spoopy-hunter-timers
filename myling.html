@@ -1,436 +1,542 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Myling Timer</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: system-ui, sans-serif;
-      background: #191919;
-      color: #e5e7eb;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-    }
+    <meta charset="UTF-8" />
+    <title>Myling Timer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, sans-serif;
+            background: #191919;
+            color: #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
 
-    /* --- BASE BAR --- */
-    .timer-static {
-      position: relative;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 4px 12px;
-      height: 30px;
-      border-radius: 4px;
+        .timer-myling {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 4px 12px;
+            height: 30px;
+            border-radius: 4px;
+            background: radial-gradient(circle at top, #170202 0, #170202 60%);
+            border: 1px solid rgba(248, 56, 82, 0.6);
+            box-shadow: inset 0 0 4px rgba(42, 15, 15, 0.95), 0 0 12px rgba(248, 56, 98, 0.35);
+            overflow: hidden;
+        }
 
-      background: radial-gradient(circle at top, #170202 0, #170202 60%);
-      border: 1px solid rgba(248, 56, 82, 0.6);
+        .timer-myling::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image:
+                repeating-linear-gradient(0deg,
+                    rgba(200, 200, 200, 0.05) 0,
+                    rgba(200, 200, 200, 0.05) 1px,
+                    transparent 1px,
+                    transparent 2px),
+                linear-gradient(90deg,
+                    transparent 0%,
+                    rgba(238, 34, 34, 0.2) 20%,
+                    rgba(212, 45, 45, 0.45) 50%,
+                    rgba(238, 34, 34, 0.2) 80%,
+                    transparent 100%);
+            background-size: 120px 40px, 200% 100%;
+            opacity: 0.5;
+            mix-blend-mode: screen;
+            pointer-events: none;
+            animation: spirit-noise 6s linear infinite;
+        }
 
-      box-shadow:
-        0 0 12px rgba(248, 56, 98, 0.35),
-        inset 0 0 4px rgba(42, 15, 15, 0.95);
+        .timer-myling::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            pointer-events: none;
+            animation: none;
+        }
 
-      overflow: hidden;
-    }
+        .timer-myling .timer-time {
+            position: relative;
+            z-index: 2;
+            font-size: 18px;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: 0.18em;
+            min-width: 80px;
+            text-align: center;
+            cursor: pointer;
+            color: #e0f2fe;
+            text-shadow:
+                0 0 4px rgba(248, 56, 82, 0.6),
+                0 0 10px rgba(212, 78, 45, 0.9);
+        }
 
-    /* --- STATIC TEXTURE --- */
-    .timer-static::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background-image:
-        repeating-linear-gradient(
-          0deg,
-          rgba(200,200,200,0.06) 0,
-          rgba(200,200,200,0.06) 1px,
-          transparent 1px,
-          transparent 2px
-        ),
-        repeating-linear-gradient(
-          90deg,
-          transparent 0%,
-          rgba(200,200,200,0.06) 0,
-          rgba(200,200,200,0.06) 1px,
-          transparent 1px,
-          transparent 3px
-        );
-      background-size: 120px 40px, 200% 100%;
-      opacity: 0.5;
-      mix-blend-mode: screen;
-      pointer-events: none;
-      animation: spirit-noise 6s linear infinite;
-    }
+        .timer-myling .timer-time::after {
+            content: "";
+            position: absolute;
+            left: 2px;
+            right: 2px;
+            bottom: -2px;
+            height: 3px;
+            background: linear-gradient(90deg,
+                    transparent 0,
+                    rgba(96, 165, 250, 0.7) 20%,
+                    rgba(240, 83, 83, 0.7) 40%,
+                    rgba(129, 140, 248, 0.7) 60%,
+                    rgba(96, 165, 250, 0.7) 80%,
+                    transparent 100%);
+            opacity: 0.7;
+        }
 
-    /* --- FLICKER OVERLAY --- */
-    .timer-static::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: rgba(0,0,0,0.5);
-      pointer-events: none;
-      animation: none;
-    }
+        .timer-myling .timer-buttons {
+            z-index: 2;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
 
-    /* --- TIME --- */
-    .timer-static .timer-time {
-      position: relative;
-      z-index: 2;
-      font-size: 18px;
-      font-variant-numeric: tabular-nums;
-      letter-spacing: 0.18em;
-      min-width: 80px;
-      text-align: center;
-      cursor: pointer;
-      color: #e0f2fe;
-      text-shadow:
-        0 0 4px rgba(248, 56, 56, 0.95),
-        0 0 10px rgba(212, 78, 45, 0.9);
-    }
+        .timer-myling .timer-btn {
+            width: 22px;
+            height: 16px;
+            border-radius: 2px;
+            background: #170202;
+            border: 1px solid rgba(248, 56, 82, 0.6);
+            font-size: 8px;
+            line-height: 1;
+            color: #e5e7eb;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow:
+                inset 0 0 2px rgba(0, 0, 0, 0.8),
+                0 0 5px rgba(15, 23, 42, 0.9);
+            transition: background 0.1s ease, transform 0.07s ease;
+        }
 
-    /* --- GLITCH BAR --- */
-    .timer-static .timer-time::after {
-      content: "";
-      position: absolute;
-      left: 2px;
-      right: 2px;
-      bottom: -2px;
-      height: 3px;
-      background: linear-gradient(
-        90deg,
-        transparent 0,
-        rgba(96,165,250,0.7) 20%,
-        rgba(240,83,83,0.7) 40%,
-        rgba(129,140,248,0.7) 60%,
-        rgba(96,165,250,0.7) 80%,
-        transparent 100%
-      );
-      opacity: 0.7;
-    }
+        .timer-myling #start-pause.timer-btn {
+            padding-top: 1px;
+        }
 
-    /* --- BUTTONS --- */
-    .timer-static .timer-buttons {
-      z-index: 2;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
+        .timer-myling #reset.timer-btn {
+            padding-bottom: 1px;
+        }
 
-    .timer-static .timer-btn {
-      width: 22px;
-      height: 16px;
-      border-radius: 2px;
-      background: #020617;
-      border: 1px solid #4b5563;
-      font-size: 8px;
-      line-height: 1;
-      color: #e5e7eb;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow:
-        inset 0 0 2px rgba(0,0,0,0.8),
-        0 0 5px rgba(15,23,42,0.9);
-      transition: background 0.1s ease, transform 0.07s ease;
-    }
+        .timer-myling .timer-btn:hover {
+            background: #170202;
+        }
 
-    .timer-static #start-pause.timer-btn { padding-top: 1px; }
-    .timer-static #reset.timer-btn       { padding-bottom: 1px; }
+        .timer-myling .timer-btn:active {
+            transform: translateY(1px);
+        }
 
-    .timer-static .timer-btn:hover { background: #111827; }
-    .timer-static .timer-btn:active { transform: translateY(1px); }
+        .timer-myling.running.flicker-low {
+            animation: bar-flicker-low 0.8s;
+        }
 
-    /* --- RUNNING STATES --- */
-    .timer-static.running {
-      /* base running */
-    }
+        .timer-myling.running.flicker-low::before {
+            animation: tv-static-move 0.4s steps(3, end);
+        }
 
-    .timer-static.running.flicker-low {
-      animation: bar-flicker-low 0.8s;
-    }
+        .timer-myling.running.flicker-low::after {
+            animation: tv-flicker-low 0.8s;
+        }
 
-    .timer-static.running.flicker-low::before {
-      animation: tv-static-move 0.4s steps(3, end);
-    }
+        .timer-myling.running.flicker-high {
+            animation: bar-flicker-high 1s;
+        }
 
-    .timer-static.running.flicker-low::after {
-      animation: tv-flicker-low 0.8s;
-    }
+        .timer-myling.running.flicker-high::before {
+            animation: tv-static-move 0.3s steps(3, end);
+        }
 
-    .timer-static.running.flicker-high {
-      animation: bar-flicker-high 1s;
-    }
+        .timer-myling.running.flicker-high::after {
+            animation: tv-flicker-high 1s;
+        }
 
-    .timer-static.running.flicker-high::before {
-      animation: tv-static-move 0.3s steps(3, end);
-    }
+        .timer-myling.end-flicker {
+            animation: bar-flicker-max 0.9s;
+        }
 
-    .timer-static.running.flicker-high::after {
-      animation: tv-flicker-high 1s;
-    }
+        .timer-myling.end-flicker::before {
+            animation: tv-static-move 0.7s steps(4, end);
+        }
 
-    .timer-static.end-flicker {
-      animation: bar-flicker-max 0.9s;
-    }
+        .timer-myling.end-flicker::after {
+            animation: tv-flicker-max 0.9s;
+        }
 
-    .timer-static.end-flicker::before {
-      animation: tv-static-move 0.7s steps(4, end);
-    }
+        @keyframes tv-static-move {
+            0% {
+                background-position: 0px 0px, 0px 0px;
+            }
 
-    .timer-static.end-flicker::after {
-      animation: tv-flicker-max 0.9s;
-    }
+            100% {
+                background-position: 120px 40px, -80px 30px;
+            }
+        }
 
-    /* --- ANIMATIONS --- */
-    @keyframes tv-static-move {
-      0%   { background-position:   0px  0px,   0px  0px; }
-      100% { background-position: 120px 40px, -80px 30px; }
-    }
+        @keyframes tv-flicker-low {
 
-    @keyframes tv-flicker-low {
-      0%, 100% { opacity: 1; }
-      20% { opacity: 0.9; }
-      23% { opacity: 1; }
-      60% { opacity: 0.88; }
-      63% { opacity: 1; }
-    }
+            0%,
+            100% {
+                opacity: 1;
+            }
 
-    @keyframes tv-flicker-high {
-      0%, 100% { opacity: 1; }
-      10% { opacity: 0.78; }
-      13% { opacity: 1; }
-      40% { opacity: 0.7; }
-      42% { opacity: 0.95; }
-      44% { opacity: 0.72; }
-      47% { opacity: 1; }
-      75% { opacity: 0.8; }
-      78% { opacity: 1; }
-    }
+            20% {
+                opacity: 0.9;
+            }
 
-    @keyframes tv-flicker-max {
-      0%, 100% { opacity: 1; }
-      20% { opacity: 0.6; }
-      23% { opacity: 0.95; }
-      26% { opacity: 0.55; }
-      29% { opacity: 0.98; }
-      32% { opacity: 0.6; }
-      35% { opacity: 1; }
-      70% { opacity: 0.7; }
-      74% { opacity: 1; }
-    }
+            23% {
+                opacity: 1;
+            }
 
-    @keyframes bar-flicker-low {
-      0%, 100% { filter: none; }
-      20% { filter: brightness(0.9) contrast(1.05); }
-      23% { filter: none; }
-      60% { filter: brightness(1.05) contrast(1.03); }
-      63% { filter: none; }
-    }
+            60% {
+                opacity: 0.88;
+            }
 
-    @keyframes bar-flicker-high {
-      0%, 100% { filter: none; }
-      10% { filter: brightness(0.85) contrast(1.15); }
-      13% { filter: none; }
-      40% { filter: brightness(0.8) contrast(1.2); }
-      44% { filter: none; }
-      75% { filter: brightness(1.1); }
-      78% { filter: none; }
-    }
+            63% {
+                opacity: 1;
+            }
+        }
 
-    @keyframes bar-flicker-max {
-      0%, 100% { filter: none; }
-      20% { filter: brightness(0.7) contrast(1.25); }
-      32% { filter: brightness(1.2) contrast(1.1); }
-      70% { filter: brightness(0.8) contrast(1.2); }
-    }
-  </style>
+        @keyframes tv-flicker-high {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            10% {
+                opacity: 0.78;
+            }
+
+            13% {
+                opacity: 1;
+            }
+
+            40% {
+                opacity: 0.7;
+            }
+
+            42% {
+                opacity: 0.95;
+            }
+
+            44% {
+                opacity: 0.72;
+            }
+
+            47% {
+                opacity: 1;
+            }
+
+            75% {
+                opacity: 0.8;
+            }
+
+            78% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes tv-flicker-max {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            20% {
+                opacity: 0.6;
+            }
+
+            23% {
+                opacity: 0.95;
+            }
+
+            26% {
+                opacity: 0.55;
+            }
+
+            29% {
+                opacity: 0.98;
+            }
+
+            32% {
+                opacity: 0.6;
+            }
+
+            35% {
+                opacity: 1;
+            }
+
+            70% {
+                opacity: 0.7;
+            }
+
+            74% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes bar-flicker-low {
+
+            0%,
+            100% {
+                filter: none;
+            }
+
+            20% {
+                filter: brightness(0.9) contrast(1.05);
+            }
+
+            23% {
+                filter: none;
+            }
+
+            60% {
+                filter: brightness(1.05) contrast(1.03);
+            }
+
+            63% {
+                filter: none;
+            }
+        }
+
+        @keyframes bar-flicker-high {
+
+            0%,
+            100% {
+                filter: none;
+            }
+
+            10% {
+                filter: brightness(0.85) contrast(1.15);
+            }
+
+            13% {
+                filter: none;
+            }
+
+            40% {
+                filter: brightness(0.8) contrast(1.2);
+            }
+
+            44% {
+                filter: none;
+            }
+
+            75% {
+                filter: brightness(1.1);
+            }
+
+            78% {
+                filter: none;
+            }
+        }
+
+        @keyframes bar-flicker-max {
+
+            0%,
+            100% {
+                filter: none;
+            }
+
+            20% {
+                filter: brightness(0.7) contrast(1.25);
+            }
+
+            32% {
+                filter: brightness(1.2) contrast(1.1);
+            }
+
+            70% {
+                filter: brightness(0.8) contrast(1.2);
+            }
+        }
+    </style>
 </head>
+
 <body>
-  <div class="timer-static" id="timer">
-    <!-- default 80s shown as 01:20 -->
-    <span id="time-display" class="timer-time" title="Click to set time">01:20</span>
-
-    <div class="timer-buttons">
-      <button id="start-pause" class="timer-btn">▶</button>
-      <button id="reset" class="timer-btn">⟲</button>
+    <div class="timer-myling" id="timer">
+        <span id="time-display" class="timer-time" title="Click to set time">01:20</span>
+        <div class="timer-buttons">
+            <button id="start-pause" class="timer-btn">▶</button>
+            <button id="reset" class="timer-btn">⟲</button>
+        </div>
     </div>
-  </div>
 
-  <script>
-    const timeDisplay   = document.getElementById("time-display");
-    const startPauseBtn = document.getElementById("start-pause");
-    const resetBtn      = document.getElementById("reset");
-    const timerBar      = document.getElementById("timer");
+    <script>
+        const timeDisplay = document.getElementById("time-display");
+        const startPauseBtn = document.getElementById("start-pause");
+        const resetBtn = document.getElementById("reset");
+        const timerBar = document.getElementById("timer");
 
-    let remainingMs = 0;
-    let initialMs   = 0;
-    let intervalId  = null;
-    let running     = false;
+        let remainingMs = 0;
+        let initialMs = 0;
+        let intervalId = null;
+        let running = false;
 
-    // flags for one-time flickers
-    let flickerAtStartDone = false;
-    let flickerAt40Done    = false;
+        let flickerAtStartDone = false;
+        let flickerAt40Done = false;
 
-    function formatTime(ms) {
-      const totalSeconds = Math.max(0, Math.floor(ms / 1000));
-      const m = Math.floor(totalSeconds / 60);
-      const s = totalSeconds % 60;
-      return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
-    }
+        function formatTime(ms) {
+            const totalSeconds = Math.max(0, Math.floor(ms / 1000));
+            const m = Math.floor(totalSeconds / 60);
+            const s = totalSeconds % 60;
+            return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+        }
 
-    function updateDisplay() {
-      timeDisplay.textContent = formatTime(remainingMs);
-    }
+        function updateDisplay() {
+            timeDisplay.textContent = formatTime(remainingMs);
+        }
 
-    function parseTimeString(str) {
-      if (!str) return null;
-      str = str.trim();
-      const parts = str.split(":");
-      let m = 0, s = 0;
+        function parseTimeString(str) {
+            if (!str) return null;
+            str = str.trim();
+            const parts = str.split(":");
+            let m = 0, s = 0;
 
-      if (parts.length === 1) {
-        const num = parseInt(parts[0], 10);
-        if (isNaN(num) || num < 0) return null;
-        m = num;
-      } else if (parts.length === 2) {
-        m = parseInt(parts[0], 10);
-        s = parseInt(parts[1], 10);
-        if (isNaN(m) || isNaN(s) || m < 0 || s < 0 || s > 59) return null;
-      } else {
-        return null;
-      }
+            if (parts.length === 1) {
+                const num = parseInt(parts[0], 10);
+                if (isNaN(num) || num < 0) return null;
+                m = num;
+            } else if (parts.length === 2) {
+                m = parseInt(parts[0], 10);
+                s = parseInt(parts[1], 10);
+                if (isNaN(m) || isNaN(s) || m < 0 || s < 0 || s > 59) return null;
+            } else {
+                return null;
+            }
 
-      return (m * 60 + s) * 1000;
-    }
+            return (m * 60 + s) * 1000;
+        }
 
-    // we no longer use continuous flicker ranges, so this can be empty
-    function updateFlickerLevel() {
-      // no-op: flickers are now discrete at 80s, 40s, 0s
-    }
 
-    function pulseFlicker(cls, durationMs) {
-      timerBar.classList.add(cls);
-      setTimeout(() => {
-        timerBar.classList.remove(cls);
-      }, durationMs);
-    }
+        function pulseFlicker(cls, durationMs) {
+            timerBar.classList.add(cls);
+            setTimeout(() => {
+                timerBar.classList.remove(cls);
+            }, durationMs);
+        }
 
-    function setTimeFromPrompt() {
-      if (running) return;
-      const current = formatTime(remainingMs || initialMs || 0);
-      const input = prompt("Set time (mm:ss or minutes)", current);
-      const ms = parseTimeString(input);
-      if (ms === null || ms <= 0) return;
-      initialMs = ms;
-      remainingMs = ms;
-      updateDisplay();
-      updateFlickerLevel();
-    }
+        function setTimeFromPrompt() {
+            if (running) return;
+            const current = formatTime(remainingMs || initialMs || 0);
+            const input = prompt("Set time (mm:ss or minutes)", current);
+            const ms = parseTimeString(input);
+            if (ms === null || ms <= 0) return;
+            initialMs = ms;
+            remainingMs = ms;
+            updateDisplay();
+            updateFlickerLevel();
+        }
 
-    function triggerEndFlicker() {
-      timerBar.classList.remove("running", "flicker-low", "flicker-high");
-      timerBar.classList.add("end-flicker");
-      setTimeout(() => {
-        timerBar.classList.remove("end-flicker");
-      }, 900);
-    }
+        function triggerEndFlicker() {
+            timerBar.classList.remove("running", "flicker-low", "flicker-high");
+            timerBar.classList.add("end-flicker");
+            setTimeout(() => {
+                timerBar.classList.remove("end-flicker");
+            }, 900);
+        }
 
-    function startTimer() {
-      if (running) return;
-      if (remainingMs <= 0) {
-        if (initialMs <= 0) return;
+        function startTimer() {
+            if (running) return;
+            if (remainingMs <= 0) {
+                if (initialMs <= 0) return;
+                remainingMs = initialMs;
+            }
+
+            running = true;
+            startPauseBtn.textContent = "⏸";
+            timerBar.classList.add("running");
+
+            flickerAtStartDone = false;
+            flickerAt40Done = false;
+
+            const startTime = Date.now();
+            const startRemaining = remainingMs;
+
+            if (!flickerAtStartDone) {
+                flickerAtStartDone = true;
+                pulseFlicker("flicker-low", 800);
+            }
+
+            intervalId = setInterval(() => {
+                const elapsed = Date.now() - startTime;
+                remainingMs = startRemaining - elapsed;
+
+                if (!flickerAt40Done && remainingMs <= 40 * 1000 && remainingMs > 0) {
+                    flickerAt40Done = true;
+                    pulseFlicker("flicker-high", 1000);
+                }
+
+                if (remainingMs <= 0) {
+                    remainingMs = 0;
+                    updateDisplay();
+
+                    running = false;
+                    startPauseBtn.textContent = "▶";
+                    if (intervalId) {
+                        clearInterval(intervalId);
+                        intervalId = null;
+                    }
+
+                    triggerEndFlicker();
+                    return;
+                }
+
+                updateDisplay();
+            }, 90);
+        }
+
+        function stopTimer() {
+            if (!running) return;
+
+            running = false;
+            startPauseBtn.textContent = "▶";
+
+            timerBar.classList.remove("running", "flicker-low", "flicker-high");
+
+            if (intervalId) {
+                clearInterval(intervalId);
+                intervalId = null;
+            }
+        }
+
+        function resetTimer() {
+            stopTimer();
+            timerBar.classList.remove("end-flicker");
+            remainingMs = initialMs;
+            updateDisplay();
+            updateFlickerLevel();
+        }
+
+        startPauseBtn.addEventListener("click", () => {
+            if (running) {
+                stopTimer();
+            } else {
+                startTimer();
+            }
+        });
+
+        resetBtn.addEventListener("click", resetTimer);
+        timeDisplay.addEventListener("click", setTimeFromPrompt);
+
+        initialMs = 80 * 1000;
         remainingMs = initialMs;
-      }
-
-      running = true;
-      startPauseBtn.textContent = "⏸";
-      timerBar.classList.add("running");
-
-      // reset flicker flags on each new run
-      flickerAtStartDone = false;
-      flickerAt40Done    = false;
-
-      const startTime = Date.now();
-      const startRemaining = remainingMs;
-
-      // flicker at "80s" (start of the countdown)
-      if (!flickerAtStartDone) {
-        flickerAtStartDone = true;
-        pulseFlicker("flicker-low", 800);
-      }
-
-      intervalId = setInterval(() => {
-        const elapsed = Date.now() - startTime;
-        remainingMs = startRemaining - elapsed;
-
-        // flicker once when passing 40s
-        if (!flickerAt40Done && remainingMs <= 40 * 1000 && remainingMs > 0) {
-          flickerAt40Done = true;
-          pulseFlicker("flicker-high", 1000);
-        }
-
-        if (remainingMs <= 0) {
-          remainingMs = 0;
-          updateDisplay();
-
-          running = false;
-          startPauseBtn.textContent = "▶";
-          if (intervalId) {
-            clearInterval(intervalId);
-            intervalId = null;
-          }
-
-          // strong flicker at 0
-          triggerEndFlicker();
-          return;
-        }
-
         updateDisplay();
-      }, 90);
-    }
-
-    function stopTimer() {
-      if (!running) return;
-
-      running = false;
-      startPauseBtn.textContent = "▶";
-
-      timerBar.classList.remove("running", "flicker-low", "flicker-high");
-
-      if (intervalId) {
-        clearInterval(intervalId);
-        intervalId = null;
-      }
-    }
-
-    function resetTimer() {
-      stopTimer();
-      timerBar.classList.remove("end-flicker");
-      remainingMs = initialMs;
-      updateDisplay();
-      updateFlickerLevel();
-    }
-
-    startPauseBtn.addEventListener("click", () => {
-      if (running) {
-        stopTimer();
-      } else {
-        startTimer();
-      }
-    });
-
-    resetBtn.addEventListener("click", resetTimer);
-    timeDisplay.addEventListener("click", setTimeFromPrompt);
-
-    // full timer = 80 seconds
-    initialMs = 80 * 1000;
-    remainingMs = initialMs;
-    updateDisplay();
-    updateFlickerLevel();
-  </script>
+        updateFlickerLevel();
+    </script>
 </body>
+
 </html>
