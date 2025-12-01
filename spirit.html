@@ -1,358 +1,441 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Spirit Timer</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="UTF-8" />
+    <title>Spirit Timer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <style>
-    html, body {
-      background: transparent !important;
-      margin: 0;
-      padding: 0;
-      font-family: system-ui, sans-serif;
-      color: #e5e7eb;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-    }
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, sans-serif;
+            background: #191919;
+            color: #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
 
-    .timer-spirit {
-      position: relative;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 0 10px;
-      height: 28px;
-      border-radius: 4px;
-      background: #020617;
-      border: 1px solid rgba(56,189,248,0.35);
-      box-shadow:
-        inset 0 0 3px rgba(0,0,0,0.9),
-        0 0 7px rgba(15,23,42,0.9);
-      overflow: hidden;
-    }
+        .timer-spirit {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0 10px;
+            height: 28px;
+            border-radius: 4px;
+            background: radial-gradient(circle at top, #170202 0, #170202 60%);
+            border: 1px solid rgba(56, 189, 248, 0.6);
+            box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.95), 0 0 7px rgba(15, 23, 42, 0.35);
+            overflow: hidden;
+        }
 
-    .timer-spirit::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background-image:
-        repeating-linear-gradient(
-          0deg,
-          rgba(255,255,255,0.05) 0,
-          rgba(255,255,255,0.05) 1px,
-          transparent 1px,
-          transparent 2px
-        ),
-        linear-gradient(
-          90deg,
-          transparent 0%,
-          rgba(34,211,238,0.2) 20%,
-          rgba(45,212,191,0.45) 50%,
-          rgba(34,211,238,0.2) 80%,
-          transparent 100%
-        );
-      background-size: 120px 40px, 200% 100%;
-      opacity: 0.45;
-      mix-blend-mode: screen;
-      pointer-events: none;
-      animation: spirit-noise 6s linear infinite;
-    }
+        .timer-spirit::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image:
+                repeating-linear-gradient(0deg,
+                    rgba(255, 255, 255, 0.05) 0,
+                    rgba(255, 255, 255, 0.05) 1px,
+                    transparent 1px,
+                    transparent 2px),
+                linear-gradient(90deg,
+                    transparent 0%,
+                    rgba(34, 211, 238, 0.2) 20%,
+                    rgba(45, 212, 191, 0.45) 50%,
+                    rgba(34, 211, 238, 0.2) 80%,
+                    transparent 100%);
+            background-size: 120px 40px, 200% 100%;
+            opacity: 0.5;
+            mix-blend-mode: screen;
+            pointer-events: none;
+            animation: spirit-noise 6s linear infinite;
+        }
 
-    .timer-spirit::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: rgba(0,0,0,0.55);
-      pointer-events: none;
-    }
+        .timer-spirit::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            pointer-events: none;
+            animation: none;
+        }
 
-    .timer-spirit .timer-time {
-      position: relative;
-      z-index: 2;
-      font-size: 18px;
-      font-variant-numeric: tabular-nums;
-      letter-spacing: 0.16em;
-      min-width: 70px;
-      text-align: center;
-      cursor: pointer;
-      color: #e0f2fe;
-      text-shadow:
-        0 0 4px rgba(56,189,248,0.95),
-        0 0 8px rgba(45,212,191,0.9);
-    }
+        .timer-spirit .timer-time {
+            position: relative;
+            z-index: 2;
+            font-size: 18px;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: 0.18em;
+            min-width: 80px;
+            text-align: center;
+            cursor: pointer;
+            color: #e0f2fe;
+            text-shadow:
+                0 0 4px rgba(56, 189, 248, 0.6),
+                0 0 8px rgba(45, 212, 191, 0.9);
+        }
 
-    .timer-spirit .timer-time::after {
-      content: "";
-      position: absolute;
-      left: 3px;
-      right: 3px;
-      bottom: -2px;
-      height: 2px;
-      background: linear-gradient(
-        90deg,
-        transparent 0,
-        rgba(45,212,191,0.9) 25%,
-        rgba(56,189,248,0.9) 50%,
-        rgba(45,212,191,0.9) 75%,
-        transparent 100%
-      );
-      opacity: 0.75;
-    }
+        .timer-spirit .timer-time::after {
+            content: "";
+            position: absolute;
+            left: 2px;
+            right: 2px;
+            bottom: -2px;
+            height: 3px;
+            background: linear-gradient(90deg,
+                    transparent 0,
+                    rgba(45, 212, 191, 0.7) 25%,
+                    rgba(56, 189, 248, 0.7) 50%,
+                    rgba(45, 212, 191, 0.7) 75%,
+                    transparent 100%);
+            opacity: 0.7;
+        }
 
-    .timer-spirit .timer-buttons {
-      z-index: 2;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
+        .timer-spirit .timer-buttons {
+            z-index: 2;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
 
-    .timer-spirit .timer-btn {
-      width: 22px;
-      height: 16px;
-      border-radius: 2px;
-      background: #0b0f17;
-      border: 1px solid #3a3a3a;
-      font-size: 8px;
-      line-height: 1;
-      color: #e0f2fe;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow:
-        inset 0 0 2px rgba(0,0,0,0.9),
-        0 0 4px rgba(0,0,0,0.9);
-      transition: background 0.12s ease, transform 0.07s ease;
-    }
+        .timer-spirit .timer-btn {
+            width: 22px;
+            height: 16px;
+            border-radius: 2px;
+            background: #170202;
+            border: 1px solid rgba(56, 189, 248, 0.6);
+            font-size: 8px;
+            line-height: 1;
+            color: #e5e7eb;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow:
+                inset 0 0 2px rgba(0, 0, 0, 0.8),
+                0 0 5px rgba(0, 0, 0, 0.9);
+            transition: background 0.1s ease, transform 0.07s ease;
+        }
 
-    .timer-spirit #start-pause.timer-btn { padding-top: 1px; }
-    .timer-spirit #reset.timer-btn       { padding-bottom: 1px; }
+        .timer-spirit #start-pause.timer-btn {
+            padding-top: 1px;
+        }
 
-    .timer-spirit .timer-btn:hover { background: #141b24; }
-    .timer-spirit .timer-btn:active { transform: translateY(1px); }
+        .timer-spirit #reset.timer-btn {
+            padding-bottom: 1px;
+        }
 
-    .timer-spirit.running {}
-    .timer-spirit.running.flicker-low {
-      animation: bar-flicker-low 0.8s;
-    }
-    .timer-spirit.running.flicker-low::after {
-      animation: veil-flicker-low 0.8s;
-    }
-    .timer-spirit.running.flicker-high {
-      animation: bar-flicker-high 1s;
-    }
-    .timer-spirit.running.flicker-high::after {
-      animation: veil-flicker-high 1s;
-    }
-    .timer-spirit.end-flicker {
-      animation: bar-flicker-max 1s;
-    }
-    .timer-spirit.end-flicker::after {
-      animation: veil-flicker-max 1s;
-    }
+        .timer-spirit .timer-btn:hover {
+            background: #170202;
+        }
 
-    @keyframes spirit-noise {
-      0%   { background-position: 0 0,   0% 50%; }
-      50%  { background-position: 60px 20px, 100% 50%; }
-      100% { background-position: 120px 40px, 0% 50%; }
-    }
-    @keyframes bar-flicker-low {
-      0%,100% { filter:none; }
-      25% { filter:brightness(0.9) contrast(1.05); }
-      45% { filter:none; }
-    }
-    @keyframes bar-flicker-high {
-      0%,100% { filter:none; }
-      20% { filter:brightness(0.85) contrast(1.2); }
-      40% { filter:none; }
-    }
-    @keyframes bar-flicker-max {
-      0%,100% { filter:none; }
-      20% { filter:brightness(0.75) contrast(1.25); }
-      40% { filter:none; }
-    }
-    @keyframes veil-flicker-low {
-      0%,100% { opacity: 0.55; }
-      25% { opacity: 0.4; }
-      45% { opacity: 0.55; }
-    }
-    @keyframes veil-flicker-high {
-      0%,100% { opacity: 0.55; }
-      20% { opacity: 0.33; }
-      40% { opacity: 0.55; }
-    }
-    @keyframes veil-flicker-max {
-      0%,100% { opacity: 0.55; }
-      20% { opacity: 0.25; }
-      40% { opacity: 0.55; }
-    }
-  </style>
+        .timer-spirit .timer-btn:active {
+            transform: translateY(1px);
+        }
+
+        .timer-spirit.running.flicker-low {
+            animation: bar-flicker-low 0.8s;
+        }
+
+        .timer-spirit.running.flicker-low::after {
+            animation: veil-flicker-low 0.8s;
+        }
+
+        .timer-spirit.running.flicker-high {
+            animation: bar-flicker-high 1s;
+        }
+
+        .timer-spirit.running.flicker-high::after {
+            animation: veil-flicker-high 1s;
+        }
+
+        .timer-spirit.end-flicker {
+            animation: bar-flicker-max 1s;
+        }
+
+        .timer-spirit.end-flicker::after {
+            animation: veil-flicker-max 1s;
+        }
+
+        @keyframes spirit-noise {
+            0% {
+                background-position: 0 0, 0% 50%;
+            }
+
+            50% {
+                background-position: 60px 20px, 100% 50%;
+            }
+
+            100% {
+                background-position: 120px 40px, 0% 50%;
+            }
+        }
+
+        @keyframes bar-flicker-low {
+
+            0%,
+            100% {
+                filter: none;
+            }
+
+            25% {
+                filter: brightness(0.9) contrast(1.05);
+            }
+
+            45% {
+                filter: none;
+            }
+        }
+
+        @keyframes bar-flicker-high {
+
+            0%,
+            100% {
+                filter: none;
+            }
+
+            20% {
+                filter: brightness(0.85) contrast(1.2);
+            }
+
+            40% {
+                filter: none;
+            }
+        }
+
+        @keyframes bar-flicker-max {
+
+            0%,
+            100% {
+                filter: none;
+            }
+
+            20% {
+                filter: brightness(0.75) contrast(1.25);
+            }
+
+            40% {
+                filter: none;
+            }
+        }
+
+        @keyframes veil-flicker-low {
+
+            0%,
+            100% {
+                opacity: 0.55;
+            }
+
+            25% {
+                opacity: 0.4;
+            }
+
+            45% {
+                opacity: 0.55;
+            }
+        }
+
+        @keyframes veil-flicker-high {
+
+            0%,
+            100% {
+                opacity: 0.55;
+            }
+
+            20% {
+                opacity: 0.33;
+            }
+
+            40% {
+                opacity: 0.55;
+            }
+        }
+
+        @keyframes veil-flicker-max {
+
+            0%,
+            100% {
+                opacity: 0.55;
+            }
+
+            20% {
+                opacity: 0.25;
+            }
+
+            40% {
+                opacity: 0.55;
+            }
+        }
+    </style>
 </head>
 
 <body>
-  <div class="timer-spirit" id="timer">
-    <span id="time-display" class="timer-time" title="Click to set time">03:00</span>
-    <div class="timer-buttons">
-      <button id="start-pause" class="timer-btn">▶</button>
-      <button id="reset" class="timer-btn">⟲</button>
+    <div class="timer-spirit" id="timer">
+        <span id="time-display" class="timer-time" title="Click to set time">03:00</span>
+        <div class="timer-buttons">
+            <button id="start-pause" class="timer-btn">▶</button>
+            <button id="reset" class="timer-btn">⟲</button>
+        </div>
     </div>
-  </div>
 
-  <script>
-    const timeDisplay   = document.getElementById("time-display");
-    const startPauseBtn = document.getElementById("start-pause");
-    const resetBtn      = document.getElementById("reset");
-    const timerBar      = document.getElementById("timer");
+    <script>
+        const timeDisplay = document.getElementById("time-display");
+        const startPauseBtn = document.getElementById("start-pause");
+        const resetBtn = document.getElementById("reset");
+        const timerBar = document.getElementById("timer");
 
-    let remainingMs = 0;
-    let initialMs   = 0;
-    let intervalId  = null;
-    let running     = false;
+        let remainingMs = 0;
+        let initialMs = 0;
+        let intervalId = null;
+        let running = false;
 
-    let flickerAtStartDone = false;
-    let flickerAt2Done     = false;
-    let flickerAt1Done     = false;
+        let flickerAtStartDone = false;
+        let flickerAt2Done = false;
+        let flickerAt1Done = false;
 
-    function formatTime(ms) {
-      const totalSeconds = Math.max(0, Math.floor(ms / 1000));
-      const m = Math.floor(totalSeconds / 60);
-      const s = totalSeconds % 60;
-      return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
-    }
+        function formatTime(ms) {
+            const totalSeconds = Math.max(0, Math.floor(ms / 1000));
+            const m = Math.floor(totalSeconds / 60);
+            const s = totalSeconds % 60;
+            return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+        }
 
-    function updateDisplay() {
-      timeDisplay.textContent = formatTime(remainingMs);
-    }
+        function updateDisplay() {
+            timeDisplay.textContent = formatTime(remainingMs);
+        }
 
-    function parseTimeString(str) {
-      if (!str) return null;
-      str = str.trim();
-      const parts = str.split(":");
-      let m = 0, s = 0;
+        function parseTimeString(str) {
+            if (!str) return null;
+            str = str.trim();
+            const parts = str.split(":");
+            let m = 0, s = 0;
 
-      if (parts.length === 1) {
-        const num = parseInt(parts[0], 10);
-        if (isNaN(num) || num < 0) return null;
-        m = num;
-      } else if (parts.length === 2) {
-        m = parseInt(parts[0], 10);
-        s = parseInt(parts[1], 10);
-        if (isNaN(m) || isNaN(s) || m < 0 || s < 0 || s > 59) return null;
-      } else {
-        return null;
-      }
+            if (parts.length === 1) {
+                const num = parseInt(parts[0], 10);
+                if (isNaN(num) || num < 0) return null;
+                m = num;
+            } else if (parts.length === 2) {
+                m = parseInt(parts[0], 10);
+                s = parseInt(parts[1], 10);
+                if (isNaN(m) || isNaN(s) || m < 0 || s < 0 || s > 59) return null;
+            } else {
+                return null;
+            }
 
-      return (m * 60 + s) * 1000;
-    }
+            return (m * 60 + s) * 1000;
+        }
 
-    function updateFlickerLevel() {
-      timerBar.classList.remove("flicker-low", "flicker-high");
-    }
+        function updateFlickerLevel() {
+            timerBar.classList.remove("flicker-low", "flicker-high");
+        }
 
-    function pulseFlicker(cls, durationMs) {
-      timerBar.classList.add(cls);
-      setTimeout(() => {
-        timerBar.classList.remove(cls);
-      }, durationMs);
-    }
+        function pulseFlicker(cls, durationMs) {
+            timerBar.classList.add(cls);
+            setTimeout(() => {
+                timerBar.classList.remove(cls);
+            }, durationMs);
+        }
 
-    function setTimeFromPrompt() {
-      if (running) return;
-      const current = formatTime(remainingMs || initialMs || 0);
-      const input = prompt("Set time (mm:ss or minutes)", current);
-      const ms = parseTimeString(input);
-      if (ms === null || ms <= 0) return;
-      initialMs = ms;
-      remainingMs = ms;
-      updateDisplay();
-      updateFlickerLevel();
-    }
+        function setTimeFromPrompt() {
+            if (running) return;
+            const current = formatTime(remainingMs || initialMs || 0);
+            const input = prompt("Set time (mm:ss or minutes)", current);
+            const ms = parseTimeString(input);
+            if (ms === null || ms <= 0) return;
+            initialMs = ms;
+            remainingMs = ms;
+            updateDisplay();
+            updateFlickerLevel();
+        }
 
-    function triggerEndFlicker() {
-      timerBar.classList.remove("running", "flicker-low", "flicker-high");
-      timerBar.classList.add("end-flicker");
-      setTimeout(() => {
-        timerBar.classList.remove("end-flicker");
-      }, 1000);
-    }
+        function triggerEndFlicker() {
+            timerBar.classList.remove("running", "flicker-low", "flicker-high");
+            timerBar.classList.add("end-flicker");
+            setTimeout(() => {
+                timerBar.classList.remove("end-flicker");
+            }, 1000);
+        }
 
-    function startTimer() {
-      if (running) return;
-      if (remainingMs <= 0) {
-        if (initialMs <= 0) return;
+        function startTimer() {
+            if (running) return;
+            if (remainingMs <= 0) {
+                if (initialMs <= 0) return;
+                remainingMs = initialMs;
+            }
+
+            running = true;
+            startPauseBtn.textContent = "⏸";
+            timerBar.classList.add("running");
+            updateFlickerLevel();
+
+            flickerAtStartDone = flickerAt2Done = flickerAt1Done = false;
+
+            const startTime = Date.now();
+            const startRemaining = remainingMs;
+
+            if (!flickerAtStartDone) {
+                flickerAtStartDone = true;
+                pulseFlicker("flicker-low", 800);
+            }
+
+            intervalId = setInterval(() => {
+                const elapsed = Date.now() - startTime;
+                remainingMs = startRemaining - elapsed;
+
+                if (!flickerAt2Done && remainingMs <= 120000 && remainingMs > 60000) {
+                    flickerAt2Done = true;
+                    pulseFlicker("flicker-low", 900);
+                }
+
+                if (!flickerAt1Done && remainingMs <= 60000 && remainingMs > 0) {
+                    flickerAt1Done = true;
+                    pulseFlicker("flicker-high", 1000);
+                }
+
+                if (remainingMs <= 0) {
+                    remainingMs = 0;
+                    updateDisplay();
+                    running = false;
+                    startPauseBtn.textContent = "▶";
+                    clearInterval(intervalId);
+                    triggerEndFlicker();
+                    return;
+                }
+
+                updateDisplay();
+            }, 90);
+        }
+
+        function stopTimer() {
+            if (!running) return;
+            running = false;
+            startPauseBtn.textContent = "▶";
+            timerBar.classList.remove("running", "flicker-low", "flicker-high");
+            clearInterval(intervalId);
+        }
+
+        function resetTimer() {
+            stopTimer();
+            timerBar.classList.remove("end-flicker");
+            remainingMs = initialMs;
+            updateDisplay();
+            updateFlickerLevel();
+        }
+
+        startPauseBtn.addEventListener("click", () => running ? stopTimer() : startTimer());
+        resetBtn.addEventListener("click", resetTimer);
+        timeDisplay.addEventListener("click", setTimeFromPrompt);
+
+        initialMs = 3 * 60 * 1000;
         remainingMs = initialMs;
-      }
-
-      running = true;
-      startPauseBtn.textContent = "⏸";
-      timerBar.classList.add("running");
-      updateFlickerLevel();
-
-      flickerAtStartDone = flickerAt2Done = flickerAt1Done = false;
-
-      const startTime      = Date.now();
-      const startRemaining = remainingMs;
-
-      if (!flickerAtStartDone) {
-        flickerAtStartDone = true;
-        pulseFlicker("flicker-low", 800);
-      }
-
-      intervalId = setInterval(() => {
-        const elapsed = Date.now() - startTime;
-        remainingMs = startRemaining - elapsed;
-
-        if (!flickerAt2Done && remainingMs <= 120000 && remainingMs > 60000) {
-          flickerAt2Done = true;
-          pulseFlicker("flicker-low", 900);
-        }
-
-        if (!flickerAt1Done && remainingMs <= 60000 && remainingMs > 0) {
-          flickerAt1Done = true;
-          pulseFlicker("flicker-high", 1000);
-        }
-
-        if (remainingMs <= 0) {
-          remainingMs = 0;
-          updateDisplay();
-          running = false;
-          startPauseBtn.textContent = "▶";
-          clearInterval(intervalId);
-          triggerEndFlicker();
-          return;
-        }
-
         updateDisplay();
-      }, 90);
-    }
-
-    function stopTimer() {
-      if (!running) return;
-      running = false;
-      startPauseBtn.textContent = "▶";
-      timerBar.classList.remove("running", "flicker-low", "flicker-high");
-      clearInterval(intervalId);
-    }
-
-    function resetTimer() {
-      stopTimer();
-      timerBar.classList.remove("end-flicker");
-      remainingMs = initialMs;
-      updateDisplay();
-      updateFlickerLevel();
-    }
-
-    startPauseBtn.addEventListener("click", () => running ? stopTimer() : startTimer());
-    resetBtn.addEventListener("click", resetTimer);
-    timeDisplay.addEventListener("click", setTimeFromPrompt);
-
-    initialMs   = 3 * 60 * 1000;
-    remainingMs = initialMs;
-    updateDisplay();
-    updateFlickerLevel();
-  </script>
+        updateFlickerLevel();
+    </script>
 </body>
+
 </html>
