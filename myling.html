@@ -387,7 +387,8 @@
         let running = false;
 
         let flickerAtStartDone = false;
-        let flickerAt40Done = false;
+        let flickerAt2Done = false;
+        let flickerAt1Done = false;
 
         function formatTime(ms) {
             const totalSeconds = Math.max(0, Math.floor(ms / 1000));
@@ -421,6 +422,9 @@
             return (m * 60 + s) * 1000;
         }
 
+        function updateFlickerLevel() {
+            timerBar.classList.remove("flicker-low", "flicker-high");
+        }
 
         function pulseFlicker(cls, durationMs) {
             timerBar.classList.add(cls);
@@ -446,7 +450,7 @@
             timerBar.classList.add("end-flicker");
             setTimeout(() => {
                 timerBar.classList.remove("end-flicker");
-            }, 900);
+            }, 1000);
         }
 
         function startTimer() {
@@ -459,9 +463,9 @@
             running = true;
             startPauseBtn.textContent = "⏸";
             timerBar.classList.add("running");
+            updateFlickerLevel();
 
-            flickerAtStartDone = false;
-            flickerAt40Done = false;
+            flickerAtStartDone = flickerAt2Done = flickerAt1Done = false;
 
             const startTime = Date.now();
             const startRemaining = remainingMs;
@@ -475,22 +479,22 @@
                 const elapsed = Date.now() - startTime;
                 remainingMs = startRemaining - elapsed;
 
-                if (!flickerAt40Done && remainingMs <= 40 * 1000 && remainingMs > 0) {
-                    flickerAt40Done = true;
+                if (!flickerAt2Done && remainingMs <= 120000 && remainingMs > 60000) {
+                    flickerAt2Done = true;
+                    pulseFlicker("flicker-low", 900);
+                }
+
+                if (!flickerAt1Done && remainingMs <= 60000 && remainingMs > 0) {
+                    flickerAt1Done = true;
                     pulseFlicker("flicker-high", 1000);
                 }
 
                 if (remainingMs <= 0) {
                     remainingMs = 0;
                     updateDisplay();
-
                     running = false;
                     startPauseBtn.textContent = "▶";
-                    if (intervalId) {
-                        clearInterval(intervalId);
-                        intervalId = null;
-                    }
-
+                    clearInterval(intervalId);
                     triggerEndFlicker();
                     return;
                 }
@@ -501,16 +505,10 @@
 
         function stopTimer() {
             if (!running) return;
-
             running = false;
             startPauseBtn.textContent = "▶";
-
             timerBar.classList.remove("running", "flicker-low", "flicker-high");
-
-            if (intervalId) {
-                clearInterval(intervalId);
-                intervalId = null;
-            }
+            clearInterval(intervalId);
         }
 
         function resetTimer() {
@@ -521,14 +519,7 @@
             updateFlickerLevel();
         }
 
-        startPauseBtn.addEventListener("click", () => {
-            if (running) {
-                stopTimer();
-            } else {
-                startTimer();
-            }
-        });
-
+        startPauseBtn.addEventListener("click", () => running ? stopTimer() : startTimer());
         resetBtn.addEventListener("click", resetTimer);
         timeDisplay.addEventListener("click", setTimeFromPrompt);
 
